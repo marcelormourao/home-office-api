@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: home-office-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: home-office-api
+  template:
+    metadata:
+      labels:
+        app: home-office-api
+    spec:
+      containers:
+        - name: home-office-api
+          image: marcelormourao/home-office-api:latest
+          imagePullPolicy: "IfNotPresent" #"Always"
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: home-office-api-cm
+            - secretRef:
+                name: home-office-secrets
+
+          livenessProbe:
+            httpGet:
+              path: /home-office-api/user
+              port: 8080
+              httpHeaders:
+              - name: Custom-Header
+                value: Awesome
+            initialDelaySeconds: 3
+            periodSeconds: 3
+
+          readinessProbe:
+            httpGet:
+              path: /home-office-api/user
+              port: 8080
+            initialDelaySeconds: 3
+            periodSeconds: 3
