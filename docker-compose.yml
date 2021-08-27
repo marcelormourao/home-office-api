@@ -1,0 +1,39 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:9.6
+    container_name: db
+    ports:
+      - 5433:5432
+    environment:
+      POSTGRES_PASSWORD: home_office
+      POSTGRES_DB: home_office
+    volumes:
+      - ./scripts:/docker-entrypoint-initdb.d
+    networks:
+      - home-office-network
+
+  home-office-api:
+    container_name: home-office-api
+    image: marcelormourao/home-office-api:latest
+    build:
+      context: .
+    environment:
+      - JPDA_ADDRESS=8000
+      - JPDA_TRANSPORT=dt_socket
+      - DB_URL=jdbc:postgresql://db:5432/home_office
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=home_office
+    ports:
+      - 8080:8080
+      - 9000:8000
+    networks:
+      - home-office-network
+    command: /usr/local/tomcat/bin/catalina.sh jpda run
+
+networks: 
+    home-office-network:
+        driver: bridge
+
+

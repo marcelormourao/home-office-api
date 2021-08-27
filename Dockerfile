@@ -1,6 +1,6 @@
 FROM tomcat:8.5.60-jdk8-openjdk-slim
 
-LABEL MANTAINER="marcelo.rmourao@gmail.com"
+LABEL MAINTAINER="marcelo.rmourao@gmail.com"
 
 COPY target/home-office-api*.war /usr/local/tomcat/webapps/home-office-api.war
 
