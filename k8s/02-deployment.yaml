@@ -7,6 +7,11 @@ spec:
   selector:
     matchLabels:
       app: home-office-api
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
   template:
     metadata:
       labels:
@@ -16,6 +21,13 @@ spec:
         - name: home-office-api
           image: marcelormourao/home-office-api:latest
           imagePullPolicy: "IfNotPresent" #"Always"
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
           ports:
             - containerPort: 8080
           envFrom:
@@ -31,12 +43,16 @@ spec:
               httpHeaders:
               - name: Custom-Header
                 value: Awesome
-            initialDelaySeconds: 3
-            periodSeconds: 3
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            failureThreshold: 5
+            timeoutSeconds: 60
 
           readinessProbe:
             httpGet:
               path: /home-office-api/user
               port: 8080
-            initialDelaySeconds: 3
-            periodSeconds: 3
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            failureThreshold: 5
+            timeoutSeconds: 60
