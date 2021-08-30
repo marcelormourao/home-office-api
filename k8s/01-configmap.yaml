@@ -3,4 +3,4 @@ kind: ConfigMap
 metadata:
   name: home-office-api-cm
 data:
-  DB_URL: jdbc:postgresql://postgres:5432/home_office
+  DB_URL: jdbc:postgresql://postgres:5432/postgresdb
